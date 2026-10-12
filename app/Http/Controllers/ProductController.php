@@ -12,22 +12,45 @@ use Illuminate\Validation\Rule;
 class ProductController extends Controller
 {
     public function index(Request $request): View
-    {
-        $search = $request->query('search');
+{
+    $search = $request->query('search');
 
-        $products = Product::with('category')
-            ->when($search, function ($query, $search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                      ->orWhere('sku', 'like', "%{$search}%");
-                });
-            })
-            ->latest()
-            ->paginate(10)
-            ->withQueryString();
+    $products = Product::with('category')
+        ->when($search, function ($query, $search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('sku', 'like', "%{$search}%");
+            });
+        })
+        ->latest()
+        ->paginate(10)
+        ->withQueryString();
 
-        return view('products.index', compact('products', 'search'));
-    }
+    $totalProducts = Product::count();
+    $totalCategories = Category::count();
+    $totalStock = (int) Product::sum('quantity');
+    $lowStock = Product::where('quantity', '<=', 5)->count();
+
+    $categoryStock = Category::withSum('products', 'quantity')
+        ->orderBy('name')
+        ->get();
+
+    $chartLabels = $categoryStock->pluck('name')->values();
+    $chartValues = $categoryStock
+        ->map(fn ($category) => (int) ($category->products_sum_quantity ?? 0))
+        ->values();
+
+    return view('products.index', compact(
+        'products',
+        'search',
+        'totalProducts',
+        'totalCategories',
+        'totalStock',
+        'lowStock',
+        'chartLabels',
+        'chartValues'
+    ));
+}
 
     public function create(): View
     {

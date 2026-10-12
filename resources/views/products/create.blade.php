@@ -1,61 +1,149 @@
+@extends('layouts.app')
 
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Tambah Produk</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 700px; margin: 35px auto; padding: 0 18px; background: #f5f7fb; }
-        .panel { background: white; padding: 24px; border-radius: 8px; }
-        label { display: block; margin-top: 14px; font-weight: bold; }
-        input, select, textarea { box-sizing: border-box; width: 100%; padding: 10px; margin-top: 6px; border: 1px solid #ccc; border-radius: 4px; }
-        button, .btn { display: inline-block; padding: 10px 14px; margin-top: 18px; background: #2457a7; color: white; border: 0; border-radius: 5px; text-decoration: none; cursor: pointer; }
-        .errors { color: #b42318; }
-    </style>
-</head>
-<body>
-    <h1>Tambah Produk</h1>
+@section('title', 'Tambah Produk')
+@section('heading', 'ADMIN')
+
+@section('content')
+<div class="container-fluid px-0">
+    <div class="mb-4">
+        <h2 class="fw-bold mb-1">Tambah Produk</h2>
+        <p class="text-secondary mb-0">
+            Tambahkan data produk baru ke inventaris.
+        </p>
+    </div>
+
     <div class="panel">
-        @if($errors->any())
-            <ul class="errors">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        @endif
-
-        <form action="{{ route('products.store') }}" method="POST">
+        <form action="{{ route('products.store') }}" method="POST" novalidate>
             @csrf
 
-            <label>Nama Produk</label>
-            <input name="name" value="{{ old('name') }}" required>
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <strong>Periksa kembali data yang dimasukkan:</strong>
+                    <ul class="mb-0 mt-2">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-            <label>SKU / Kode Produk</label>
-            <input name="sku" value="{{ old('sku') }}" required>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="name" class="form-label fw-semibold">
+                        Nama Produk
+                    </label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        class="form-control"
+                        value="{{ old('name') }}"
+                        placeholder="Masukkan nama produk"
+                        required
+                    >
+                </div>
 
-            <label>Kategori</label>
-            <select name="category_id" required>
-                <option value="">-- Pilih Kategori --</option>
-                @foreach($categories as $category)
-                    <option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>
-                        {{ $category->name }}
-                    </option>
-                @endforeach
-            </select>
+                <div class="col-md-6">
+                    <label for="sku" class="form-label fw-semibold">
+                        SKU / Kode Produk
+                    </label>
+                    <input
+                        type="text"
+                        id="sku"
+                        name="sku"
+                        class="form-control"
+                        value="{{ old('sku') }}"
+                        placeholder="Contoh: ELK-002"
+                        required
+                    >
+                </div>
 
-            <label>Jumlah Stok</label>
-            <input type="number" name="quantity" min="0" value="{{ old('quantity', 0) }}" required>
+                <div class="col-md-6">
+                    <label for="category_id" class="form-label fw-semibold">
+                        Kategori
+                    </label>
+                    <select
+                        id="category_id"
+                        name="category_id"
+                        class="form-select"
+                        required
+                    >
+                        <option value="">-- Pilih Kategori --</option>
 
-            <label>Harga (Rp)</label>
-            <input type="number" name="price" min="0" step="0.01" value="{{ old('price', 0) }}" required>
+                        @foreach ($categories as $category)
+                            <option
+                                value="{{ $category->id }}"
+                                @selected(old('category_id') == $category->id)
+                            >
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <label>Deskripsi</label>
-            <textarea name="description" rows="4">{{ old('description') }}</textarea>
+                <div class="col-md-6">
+                    <label for="quantity" class="form-label fw-semibold">
+                        Jumlah Stok
+                    </label>
+                    <input
+                        type="number"
+                        id="quantity"
+                        name="quantity"
+                        class="form-control"
+                        min="0"
+                        value="{{ old('quantity', 0) }}"
+                        required
+                    >
+                </div>
 
-            <button type="submit">Simpan Produk</button>
-            <a class="btn" href="{{ route('products.index') }}">Kembali</a>
+                <div class="col-md-6">
+                    <label for="price" class="form-label fw-semibold">
+                        Harga (Rp)
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input
+                            type="number"
+                            id="price"
+                            name="price"
+                            class="form-control"
+                            min="0"
+                            step="0.01"
+                            value="{{ old('price', 0) }}"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <label for="description" class="form-label fw-semibold">
+                        Deskripsi
+                    </label>
+                    <textarea
+                        id="description"
+                        name="description"
+                        class="form-control"
+                        rows="4"
+                        placeholder="Masukkan deskripsi produk (opsional)"
+                    >{{ old('description') }}</textarea>
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="d-flex flex-wrap gap-2">
+                <button type="submit" class="btn btn-green">
+                    <i class="bi bi-check-circle me-1"></i>
+                    Simpan Produk
+                </button>
+
+                <a href="{{ route('products.index') }}"
+                   class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>
+                    Kembali
+                </a>
+            </div>
         </form>
     </div>
-</body>
-</html>
+</div>
+@endsection

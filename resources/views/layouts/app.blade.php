@@ -381,11 +381,15 @@
             Dashboard
         </a>
 
+        @auth
+    @if(auth()->user()->isAdmin())
         <a href="{{ route('products.create') }}"
            class="{{ request()->routeIs('products.create') ? 'active' : '' }}">
             <i class="bi bi-plus-circle"></i>
             Tambah Produk
         </a>
+    @endif
+@endauth
 
         <div class="sidebar-footer">
             <i class="bi bi-shield-check me-2"></i>
@@ -400,10 +404,38 @@
                 
             </div>
 
-            <div class="admin-chip">
-                <span class="admin-avatar"><i class="bi bi-person"></i></span>
-                <span class="admin-text">Administrator</span>
+            
+@auth
+<div class="d-flex align-items-center gap-2 flex-wrap">
+
+    <div class="admin-chip">
+        <span class="admin-avatar">
+            <i class="bi bi-person-circle"></i>
+        </span>
+
+        <div class="admin-text">
+            <div class="fw-bold">
+                {{ auth()->user()->name }}
             </div>
+            <small class="text-secondary">
+                {{ ucfirst(auth()->user()->role) }}
+            </small>
+        </div>
+    </div>
+
+    <form action="{{ route('logout') }}" method="POST" class="m-0">
+        @csrf
+
+        <button type="submit"
+                class="btn btn-outline-danger d-flex align-items-center gap-2">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Logout</span>
+        </button>
+    </form>
+
+</div>
+@endauth
+
         </header>
 
         @yield('content')

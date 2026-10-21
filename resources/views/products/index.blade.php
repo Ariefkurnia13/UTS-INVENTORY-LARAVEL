@@ -116,10 +116,12 @@
             </div>
         </div>
 
-        <a href="{{ route('products.create') }}" class="btn-green">
-            <i class="bi bi-plus-lg"></i>
-            Tambah Produk
-        </a>
+        @if(auth()->user()->isAdmin())
+    <a href="{{ route('products.create') }}" class="btn-green">
+        <i class="bi bi-plus-lg"></i>
+        Tambah Produk
+    </a>
+@endif
     </div>
 
     {{-- PENCARIAN --}}
@@ -217,26 +219,30 @@
                                     <i class="bi bi-eye"></i>
                                 </a>
 
-                                <a href="{{ route('products.edit', $product) }}"
-                                   class="action-btn"
-                                   title="Edit"
-                                   aria-label="Edit produk">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
+                                @if(auth()->user()->isAdmin())
+    <a href="{{ route('products.edit', $product) }}"
+       class="action-btn"
+       title="Edit"
+       aria-label="Edit produk">
+        <i class="bi bi-pencil"></i>
+    </a>
+@endif
 
-                                <form action="{{ route('products.destroy', $product) }}"
-                                      method="POST"
-                                      onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
-                                    @csrf
-                                    @method('DELETE')
+                                @if(auth()->user()->isAdmin())
+    <form action="{{ route('products.destroy', $product) }}"
+          method="POST"
+          onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
+        @csrf
+        @method('DELETE')
 
-                                    <button type="submit"
-                                            class="action-btn action-delete"
-                                            title="Hapus"
-                                            aria-label="Hapus produk">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </form>
+        <button type="submit"
+                class="action-btn action-delete"
+                title="Hapus"
+                aria-label="Hapus produk">
+            <i class="bi bi-trash"></i>
+        </button>
+    </form>
+@endif
                             </div>
                         </td>
                     </tr>

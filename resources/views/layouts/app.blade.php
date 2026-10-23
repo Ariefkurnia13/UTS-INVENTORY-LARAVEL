@@ -365,6 +365,9 @@
 
     @stack('styles')
 </head>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <body>
 
     <aside class="sidebar">
@@ -375,11 +378,21 @@
 
         <div class="menu-label">Menu Utama</div>
 
-        <a href="{{ route('products.index') }}"
-           class="{{ request()->routeIs('products.index') ? 'active' : '' }}">
-            <i class="bi bi-grid-1x2"></i>
-            Dashboard
-        </a>
+        
+
+<a href="{{ route('dashboard') }}"
+   class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+    <i class="bi bi-grid-1x2"></i>
+    Dashboard
+</a>
+
+<a href="{{ route('products.index') }}"
+   class="{{ request()->routeIs('products.*') ? 'active' : '' }}">
+    <i class="bi bi-box-seam"></i>
+    Data Produk
+</a>
+
+
 
         @auth
     @if(auth()->user()->isAdmin())
@@ -389,6 +402,50 @@
             Tambah Produk
         </a>
     @endif
+
+    {{-- Menu Data Kategori untuk Admin dan Staff --}}
+    <a href="{{ route('categories.index') }}"
+       class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">
+        <i class="bi bi-tags"></i>
+        Data Kategori
+    </a>
+
+    {{-- Menu Data Supplier untuk Admin dan Staff --}}
+<a href="{{ route('suppliers.index') }}"
+   class="{{ request()->routeIs('suppliers.*') ? 'active' : '' }}">
+    <i class="bi bi-truck"></i>
+    Data Supplier
+</a>
+
+{{-- Menu Pembelian untuk Admin dan Staff --}}
+<a href="{{ route('purchases.index') }}"
+   class="{{ request()->routeIs('purchases.*') ? 'active' : '' }}">
+    <i class="bi bi-cart-check"></i>
+    Pembelian
+</a>
+
+<a href="{{ route('sales.index') }}"
+   class="{{ request()->routeIs('sales.*') ? 'active' : '' }}">
+    <i class="bi bi-receipt"></i>
+    Penjualan
+</a>
+
+<a href="{{ route('low-stock.index') }}"
+   class="{{ request()->routeIs('low-stock.*') ? 'active' : '' }}">
+    <i class="bi bi-exclamation-triangle"></i>
+    Stok Menipis
+</a>
+
+{{-- Manajemen Pengguna khusus Admin --}}
+@if(auth()->user()->isAdmin())
+    <a href="{{ route('users.index') }}"
+       class="{{ request()->routeIs('users.*') ? 'active' : '' }}">
+        <i class="bi bi-people"></i>
+        Manajemen Pengguna
+    </a>
+@endif
+
+
 @endauth
 
         <div class="sidebar-footer">

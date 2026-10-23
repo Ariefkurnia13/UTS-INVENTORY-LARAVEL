@@ -12,6 +12,15 @@
     </div>
 @endif
 
+
+@if(session('error'))
+    <div class="alert alert-danger bg-white border-danger-subtle">
+        <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+        {{ session('error') }}
+    </div>
+@endif
+
+
 @if($errors->any())
     <div class="alert alert-danger">
         <strong>Periksa kembali data yang dimasukkan:</strong>
@@ -22,89 +31,6 @@
         </ul>
     </div>
 @endif
-
-{{-- KARTU STATISTIK --}}
-<div class="row g-3 mb-4">
-    <div class="col-6 col-xl-3">
-        <div class="stat-card">
-            <div class="d-flex justify-content-between align-items-center gap-2">
-                <div>
-                    <div class="stat-label">Total Produk</div>
-                    <h2 class="stat-value">{{ $totalProducts }}</h2>
-                </div>
-                <div class="stat-icon">
-                    <i class="bi bi-box-seam"></i>
-                </div>
-            </div>
-            <div class="stat-note">Jumlah jenis produk</div>
-        </div>
-    </div>
-
-    <div class="col-6 col-xl-3">
-        <div class="stat-card">
-            <div class="d-flex justify-content-between align-items-center gap-2">
-                <div>
-                    <div class="stat-label">Kategori</div>
-                    <h2 class="stat-value">{{ $totalCategories }}</h2>
-                </div>
-                <div class="stat-icon">
-                    <i class="bi bi-collection"></i>
-                </div>
-            </div>
-            <div class="stat-note">Kategori terdaftar</div>
-        </div>
-    </div>
-
-    <div class="col-6 col-xl-3">
-        <div class="stat-card">
-            <div class="d-flex justify-content-between align-items-center gap-2">
-                <div>
-                    <div class="stat-label">Total Stok</div>
-                    <h2 class="stat-value">{{ number_format($totalStock, 0, ',', '.') }}</h2>
-                </div>
-                <div class="stat-icon">
-                    <i class="bi bi-boxes"></i>
-                </div>
-            </div>
-            <div class="stat-note">Total unit barang</div>
-        </div>
-    </div>
-
-    <div class="col-6 col-xl-3">
-        <div class="stat-card">
-            <div class="d-flex justify-content-between align-items-center gap-2">
-                <div>
-                    <div class="stat-label">Stok Menipis</div>
-                    <h2 class="stat-value {{ $lowStock > 0 ? 'text-danger' : 'text-success' }}">
-                        {{ $lowStock }}
-                    </h2>
-                </div>
-                <div class="stat-icon"
-                     style="background:{{ $lowStock > 0 ? '#fee2e2' : '#dcfce7' }};
-                            color:{{ $lowStock > 0 ? '#dc2626' : '#15803d' }}">
-                    <i class="bi bi-exclamation-triangle"></i>
-                </div>
-            </div>
-            <div class="stat-note">Stok 5 unit atau kurang</div>
-        </div>
-    </div>
-</div>
-
-{{-- GRAFIK --}}
-<div class="panel mb-4">
-    <div class="mb-3">
-        <h5 class="panel-heading">Ringkasan Persediaan</h5>
-        <div class="panel-description">
-            Jumlah stok barang berdasarkan kategori.
-        </div>
-    </div>
-
-    <div style="height:280px; position:relative;">
-        <canvas id="stockChart"
-                role="img"
-                aria-label="Grafik jumlah stok berdasarkan kategori"></canvas>
-    </div>
-</div>
 
 {{-- DAFTAR PRODUK --}}
 <div class="panel">
@@ -148,7 +74,23 @@
             </button>
         </div>
 
-        @if($search)
+        
+<div class="col-12 col-md-4">
+    <select name="category_id" class="form-select">
+        <option value="">Semua Kategori</option>
+        @foreach($categories as $category)
+            <option
+                value="{{ $category->id }}"
+                @selected((string) $categoryId === (string) $category->id)
+            >
+                {{ $category->name }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
+
+        @if($search || $categoryId)
             <div class="col-auto">
                 <a href="{{ route('products.index') }}"
                    class="btn btn-light border py-2">
@@ -167,7 +109,7 @@
                     <th>SKU</th>
                     <th>Kategori</th>
                     <th>Stok</th>
-                    <th>Harga</th>
+                    <th>Harga jual</th>
                     <th>Tindakan</th>
                 </tr>
             </thead>
@@ -195,7 +137,7 @@
                         <td>
                             @if($product->quantity == 0)
                                 <span class="stock-badge stock-empty">Habis</span>
-                            @elseif($product->quantity <= 5)
+                            @elseif($product->quantity <= $product->minimum_stock)
                                 <span class="stock-badge stock-low">
                                     {{ $product->quantity }} unit
                                 </span>
@@ -207,7 +149,7 @@
                         </td>
 
                         <td class="fw-semibold text-nowrap">
-                            Rp {{ number_format((float) $product->price, 0, ',', '.') }}
+                            Rp {{ number_format((float) $product->selling_price, 0, ',', '.') }}
                         </td>
 
                         <td>
@@ -272,56 +214,3 @@
 </div>
 
 @endsection
-
-@push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    const labels = @json($chartLabels);
-    const values = @json($chartValues);
-    const canvas = document.getElementById('stockChart');
-
-    new Chart(canvas, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Jumlah stok',
-                data: values,
-                backgroundColor: '#22a05a',
-                hoverBackgroundColor: '#166534',
-                borderRadius: 7,
-                maxBarThickness: 48
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return ' Stok: ' + context.parsed.y + ' unit';
-                        }
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    grid: {
-                        display: false
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        precision: 0
-                    }
-                }
-            }
-        }
-    });
-</script>
-@endpush

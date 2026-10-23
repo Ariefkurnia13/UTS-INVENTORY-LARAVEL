@@ -57,6 +57,45 @@
                         required
                     >
                 </div>
+                
+<div class="col-md-6">
+    <label for="purchase_price" class="form-label fw-semibold">
+        Harga Beli (Rp)
+    </label>
+    <div class="input-group">
+        <span class="input-group-text">Rp</span>
+        <input
+            type="number"
+            id="purchase_price"
+            name="purchase_price"
+            class="form-control"
+            min="0"
+            step="0.01"
+            value="{{ old('purchase_price', 0) }}"
+            required
+        >
+    </div>
+</div>
+
+<div class="col-md-6">
+    <label for="selling_price" class="form-label fw-semibold">
+        Harga Jual (Rp)
+    </label>
+    <div class="input-group">
+        <span class="input-group-text">Rp</span>
+        <input
+            type="number"
+            id="selling_price"
+            name="selling_price"
+            class="form-control"
+            min="0"
+            step="0.01"
+            value="{{ old('selling_price', 0) }}"
+            required
+        >
+    </div>
+</div>
+
 
                 <div class="col-md-6">
                     <label for="category_id" class="form-label fw-semibold">
@@ -97,22 +136,21 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label for="price" class="form-label fw-semibold">
-                        Harga (Rp)
-                    </label>
-                    <div class="input-group">
-                        <span class="input-group-text">Rp</span>
-                        <input
-                            type="number"
-                            id="price"
-                            name="price"
-                            class="form-control"
-                            min="0"
-                            step="0.01"
-                            value="{{ old('price', 0) }}"
-                            required
-                        >
-                    </div>
+    <label for="minimum_stock" class="form-label fw-semibold">
+        Stok Minimum
+    </label>
+    <input
+        type="number"
+        id="minimum_stock"
+        name="minimum_stock"
+        class="form-control"
+        min="0"
+        value="{{ old('minimum_stock', 5) }}"
+        required
+    >
+</div>
+
+        
                 </div>
 
                 <div class="col-12">

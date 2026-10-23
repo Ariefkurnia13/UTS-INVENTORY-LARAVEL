@@ -1,3 +1,4 @@
+
 @extends('layouts.app')
 
 @section('title', 'Edit Produk')
@@ -39,7 +40,6 @@
                         name="name"
                         class="form-control"
                         value="{{ old('name', $product->name) }}"
-                        placeholder="Masukkan nama produk"
                         required
                     >
                 </div>
@@ -54,7 +54,6 @@
                         name="sku"
                         class="form-control"
                         value="{{ old('sku', $product->sku) }}"
-                        placeholder="Contoh: ELK-001"
                         required
                     >
                 </div>
@@ -70,14 +69,10 @@
                         required
                     >
                         <option value="">-- Pilih Kategori --</option>
-
                         @foreach ($categories as $category)
                             <option
                                 value="{{ $category->id }}"
-                                @selected(
-                                    old('category_id', $product->category_id)
-                                    == $category->id
-                                )
+                                @selected(old('category_id', $product->category_id) == $category->id)
                             >
                                 {{ $category->name }}
                             </option>
@@ -101,19 +96,40 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label for="price" class="form-label fw-semibold">
-                        Harga (Rp)
+                    <label for="minimum_stock" class="form-label fw-semibold">
+                        Batas Minimum Stok
+                    </label>
+                    <input
+                        type="number"
+                        id="minimum_stock"
+                        name="minimum_stock"
+                        class="form-control"
+                        min="0"
+                        value="{{ old('minimum_stock', $product->minimum_stock ?? 5) }}"
+                        required
+                    >
+                    <small class="text-secondary">
+                        Stok menipis jika jumlahnya mencapai atau di bawah batas ini.
+                    </small>
+                </div>
+
+            
+                </div>
+
+                <div class="col-md-6">
+                    <label for="selling_price" class="form-label fw-semibold">
+                        Harga Jual (Rp)
                     </label>
                     <div class="input-group">
                         <span class="input-group-text">Rp</span>
                         <input
                             type="number"
-                            id="price"
-                            name="price"
+                            id="selling_price"
+                            name="selling_price"
                             class="form-control"
                             min="0"
                             step="0.01"
-                            value="{{ old('price', $product->price) }}"
+                            value="{{ old('selling_price', $product->selling_price ?? 0) }}"
                             required
                         >
                     </div>

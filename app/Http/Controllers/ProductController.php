@@ -11,9 +11,11 @@ use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
-    public function index(Request $request): View
+   
+public function index(Request $request): View
 {
     $search = $request->query('search');
+    $categoryId = $request->query('category_id');
 
     $products = Product::with('category')
         ->when($search, function ($query, $search) {
@@ -22,14 +24,19 @@ class ProductController extends Controller
                   ->orWhere('sku', 'like', "%{$search}%");
             });
         })
+        ->when($categoryId, function ($query, $categoryId) {
+            $query->where('category_id', $categoryId);
+        })
         ->latest()
-        ->paginate(10)
+        ->paginate(5)
         ->withQueryString();
+
+    $categories = Category::orderBy('name')->get();
 
     $totalProducts = Product::count();
     $totalCategories = Category::count();
     $totalStock = (int) Product::sum('quantity');
-    $lowStock = Product::where('quantity', '<=', 5)->count();
+    $lowStock = Product::whereColumn('quantity', '<=', 'minimum_stock')->count();
 
     $categoryStock = Category::withSum('products', 'quantity')
         ->orderBy('name')
@@ -42,7 +49,9 @@ class ProductController extends Controller
 
     return view('products.index', compact(
         'products',
+        'categories',
         'search',
+        'categoryId',
         'totalProducts',
         'totalCategories',
         'totalStock',
@@ -59,22 +68,26 @@ class ProductController extends Controller
         return view('products.create', compact('categories'));
     }
 
-    public function store(Request $request): RedirectResponse
-    {
-        $validated = $request->validate([
-            'category_id' => ['required', 'exists:categories,id'],
-            'name' => ['required', 'string', 'max:255'],
-            'sku' => ['required', 'string', 'max:255', 'unique:products,sku'],
-            'quantity' => ['required', 'integer', 'min:0'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'description' => ['nullable', 'string'],
-        ]);
+    
+public function store(Request $request): RedirectResponse
+{
+    $validated = $request->validate([
+        'category_id' => ['required', 'exists:categories,id'],
+        'name' => ['required', 'string', 'max:255'],
+        'sku' => ['required', 'string', 'max:255', 'unique:products,sku'],
+        'quantity' => ['required', 'integer', 'min:0'],
+        'minimum_stock' => ['required', 'integer', 'min:0'],
+        'purchase_price' => ['required', 'numeric', 'min:0'],
+        'selling_price' => ['required', 'numeric', 'min:0'],
+        'description' => ['nullable', 'string'],
+    ]);
 
-        Product::create($validated);
+    Product::create($validated);
 
-        return redirect()->route('products.index')
-            ->with('success', 'Produk berhasil ditambahkan.');
-    }
+    return redirect()->route('products.index')
+        ->with('success', 'Produk berhasil ditambahkan.');
+}
+
 
     public function show(Product $product): View
     {
@@ -90,33 +103,47 @@ class ProductController extends Controller
         return view('products.edit', compact('product', 'categories'));
     }
 
-    public function update(Request $request, Product $product): RedirectResponse
-    {
-        $validated = $request->validate([
-            'category_id' => ['required', 'exists:categories,id'],
-            'name' => ['required', 'string', 'max:255'],
-            'sku' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('products', 'sku')->ignore($product->id),
-            ],
-            'quantity' => ['required', 'integer', 'min:0'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'description' => ['nullable', 'string'],
-        ]);
+    
+public function update(Request $request, Product $product): RedirectResponse
+{
+    $validated = $request->validate([
+        'category_id' => ['required', 'exists:categories,id'],
+        'name' => ['required', 'string', 'max:255'],
+        'sku' => [
+            'required',
+            'string',
+            'max:255',
+            Rule::unique('products', 'sku')->ignore($product->id),
+        ],
+        'quantity' => ['required', 'integer', 'min:0'],
+        'minimum_stock' => ['required', 'integer', 'min:0'],
+        'purchase_price' => ['required', 'numeric', 'min:0'],
+        'selling_price' => ['required', 'numeric', 'min:0'],
+        'description' => ['nullable', 'string'],
+    ]);
 
-        $product->update($validated);
+    $product->update($validated);
 
+    return redirect()->route('products.index')
+        ->with('success', 'Produk berhasil diperbarui.');
+}
+
+
+    
+public function destroy(Product $product): RedirectResponse
+{
+    $hasSales = \App\Models\SaleItem::where('product_id', $product->id)->exists();
+    $hasPurchases = \App\Models\PurchaseItem::where('product_id', $product->id)->exists();
+
+    if ($hasSales || $hasPurchases) {
         return redirect()->route('products.index')
-            ->with('success', 'Produk berhasil diperbarui.');
+            ->with('error', 'Produk tidak dapat dihapus karena sudah digunakan dalam transaksi.');
     }
 
-    public function destroy(Product $product): RedirectResponse
-    {
-        $product->delete();
+    $product->delete();
 
-        return redirect()->route('products.index')
-            ->with('success', 'Produk berhasil dihapus.');
-    }
+    return redirect()->route('products.index')
+        ->with('success', 'Produk berhasil dihapus.');
+}
+
 }

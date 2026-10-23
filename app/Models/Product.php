@@ -12,13 +12,19 @@ class Product extends Model
         'name',
         'sku',
         'quantity',
+        'minimum_stock',
+        'purchase_price',
+        'selling_price',
         'price',
         'description',
     ];
 
     protected $casts = [
-        'price' => 'decimal:2',
         'quantity' => 'integer',
+        'minimum_stock' => 'integer',
+        'purchase_price' => 'decimal:2',
+        'selling_price' => 'decimal:2',
+        'price' => 'decimal:2',
     ];
 
     public function category(): BelongsTo

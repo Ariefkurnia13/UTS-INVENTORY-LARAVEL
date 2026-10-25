@@ -209,7 +209,7 @@
             Menampilkan {{ $products->count() }} dari {{ $products->total() }} produk
         </small>
 
-        {{ $products->links() }}
+        {{ $products->links('pagination::bootstrap-5') }}
     </div>
 </div>
 

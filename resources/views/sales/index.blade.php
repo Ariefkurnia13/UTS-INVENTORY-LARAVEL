@@ -73,7 +73,7 @@
                             <tr>
                                 <td>{{ $sales->firstItem() + $loop->index }}</td>
                                 <td>{{ $sale->sale_number }}</td>
-                                <td>{{ $sale->user->name }}</td>
+                                <td>{{ $sale->user?->role === 'admin' ? 'Admin' : ($sale->user?->role === 'staff' ? 'Staff' : '-') }}</td>
                                 <td>
                                     Rp {{ number_format((float) $sale->total, 0, ',', '.') }}
                                 </td>

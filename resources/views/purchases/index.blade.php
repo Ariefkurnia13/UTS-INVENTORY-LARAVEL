@@ -74,7 +74,7 @@
                                 <td>{{ $purchases->firstItem() + $loop->index }}</td>
                                 <td>{{ $purchase->purchase_number }}</td>
                                 <td>{{ $purchase->supplier->name }}</td>
-                                <td>{{ $purchase->user->name }}</td>
+                                <td>{{ $purchase->user?->role === 'admin' ? 'Admin' : ($purchase->user?->role === 'staff' ? 'Staff' : '-') }}</td>
                                 <td>
                                     Rp {{ number_format((float) $purchase->total, 0, ',', '.') }}
                                 </td>

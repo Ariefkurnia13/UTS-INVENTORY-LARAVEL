@@ -23,19 +23,16 @@ komputer tujuan memenuhi kebutuhan proyek sebelum menjalankan aplikasi.
 
 ## Fitur aplikasi
 
-Fitur yang telah dilaporkan diuji: - Login, validasi login, akses
-halaman internal setelah login, dan logout. - Pembatasan akses Staff dan
-Admin, termasuk pengujian akses URL langsung. - Pengelolaan kategori,
-produk, dan supplier. - Validasi SKU unik dan penolakan nilai formulir
-yang tidak valid. - Transaksi pembelian dan penjualan beserta detail
-item. - Perubahan stok setelah transaksi, perhitungan total di sisi
-server, pembatalan transaksi yang mengembalikan stok, dan penanganan
-transaksi gagal. - Ringkasan Dashboard, daftar stok minimum,
-pencarian/filter, pagination, dan detail transaksi.
+Fitur yang dilaporkan telah diuji secara manual meliputi:
 
-**Penting:** Dashboard dipertahankan sesuai tampilan dan perilaku yang
-sudah dikerjakan. Penyeragaman tampilan halaman lain tidak dimaksudkan
-untuk mengubah Dashboard atau logika bisnis transaksi.
+- Login, validasi login, akses halaman internal setelah login, dan logout.
+- Pembatasan akses Staff dan Admin, termasuk pengujian akses URL langsung.
+- Pengelolaan kategori, produk, dan supplier.
+- Validasi SKU unik dan penolakan nilai formulir yang tidak valid.
+- Transaksi pembelian dan penjualan beserta detail item.
+- Perubahan stok setelah transaksi dan perhitungan total di sisi server.
+- Pembatalan transaksi yang mengembalikan stok serta penanganan transaksi gagal.
+- Ringkasan Dashboard, daftar stok minimum, pencarian, filter, pagination, dan detail transaksi.
 
 ## Persiapan instalasi
 
@@ -133,14 +130,11 @@ database.
 
 ## Akun demo
 
-Materi UTS mensyaratkan seeder menyiapkan kategori, produk, supplier,
-dan akun demo. Pastikan implementasi `database/seeders` benar-benar
-membuat data tersebut sebelum demo.
+Seeder akun demo dijalankan dan diverifikasi pada database pengujian terpisah.
 
-**Kredensial akun tidak dicantumkan di README ini karena nilai akun dan
-kata sandi yang aktif belum dikonfirmasi dari kode seeder terbaru.**
-Setelah diverifikasi, dokumentasikan akun demo yang aman untuk
-penilaian. Jangan gunakan kata sandi produksi.
+Seeder membuat akun Admin dan Staff menggunakan konfigurasi `DEMO_ADMIN_EMAIL`, `DEMO_ADMIN_PASSWORD`, `DEMO_STAFF_EMAIL`, dan `DEMO_STAFF_PASSWORD` pada file lingkungan. Pastikan keempat variabel tersedia sebelum menjalankan seeder.
+
+Kredensial demo tidak dicantumkan di repository. Untuk penilaian, gunakan akun demo yang disiapkan secara aman dan pastikan peran Admin serta Staff dapat digunakan untuk login.
 
 ## Aturan bisnis yang harus dipertahankan
 
@@ -160,30 +154,19 @@ penilaian. Jangan gunakan kata sandi produksi.
 -   Pembatasan Admin/Staff harus diterapkan di server, bukan hanya
     dengan menyembunyikan tombol pada tampilan.
 
-## Status pengujian yang dilaporkan
+### Pengujian tambahan
 
-Pengujian manual berikut dilaporkan **lulus oleh pengguna**. Daftar ini
-bukan laporan hasil test otomatis dan belum dijalankan ulang sebagai
-bagian penyusunan README ini.
+| Pengujian | Status | Hasil |
+|---|---|---|
+| Pemeriksaan struktur relasi dan foreign key | Sebagian diperiksa | Struktur migration, foreign key, dan relasi model ditinjau; perilaku relasi secara langsung belum seluruhnya diuji |
+| Migrasi pada database pengujian baru | Lulus | 14 migration berhasil dijalankan pada `inventory_test_db` |
+| Seeder data awal | Lulus | Terverifikasi 3 kategori, 1 supplier, 2 produk, dan 2 akun demo pada database pengujian |
+| Pemeriksaan README dan petunjuk instalasi | Sebagian diperiksa | Isi README ditinjau; instalasi lengkap dari lingkungan bersih belum dilakukan |
+| Menjalankan aplikasi kembali | Belum diuji tuntas | Belum ada verifikasi lengkap bahwa aplikasi berjalan normal setelah seluruh konfigurasi disiapkan |
 
-  Area                                     Jumlah yang dilaporkan lulus Status
-  -------------------------------------- ------------------------------ --------------------------------------------
-  Hak akses Staff dan aturan transaksi                               25 Dilaporkan lulus
-  Login dan keamanan umum                                             4 Dilaporkan lulus
-  Master data Admin                                                   7 Dilaporkan lulus
-  Pembelian dan penjualan                                             8 Dilaporkan lulus
-  Dashboard, laporan, pencarian                                       6 Dilaporkan lulus
-  **Total**                                                      **50** **Berdasarkan laporan pengujian pengguna**
+Pengujian migrasi dan seeder dilakukan pada database pengujian terpisah. Database utama `inventory_db` tidak digunakan untuk pengujian tersebut.
 
-Hal-hal yang masih dilaporkan **belum diuji**: - Relasi dan foreign key
-antar tabel berfungsi. - Migrasi dapat dijalankan pada database yang
-disiapkan. - Seeder membuat data awal yang diperlukan. - README dan
-prosedur instalasi dapat diikuti dari lingkungan bersih. - Aplikasi
-dapat dijalankan kembali setelah konfigurasi database benar.
-
-Status ini harus diperbarui setelah pemeriksaan dilakukan. Jangan
-menandai item belum diuji sebagai lulus hanya karena file atau
-konfigurasi terlihat tersedia.
+Pengujian manual 50 fitur di atas merupakan hasil yang dilaporkan pengguna, bukan hasil eksekusi ulang test otomatis. Status pengujian harus diperbarui berdasarkan hasil aktual dan tidak boleh dianggap sebagai jaminan bahwa seluruh fitur sudah diuji ulang.
 
 ## Pemecahan masalah
 

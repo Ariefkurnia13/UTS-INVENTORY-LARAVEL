@@ -53,6 +53,7 @@ public function index(Request $request)
     'email.email' => 'Format email tidak valid.',
     'email.max' => 'Email maksimal 150 karakter.',
 ]);
+        $validated['is_active'] = true;
 
         Supplier::create($validated);
 
@@ -99,12 +100,32 @@ public function index(Request $request)
     }
 
        // Menghapus supplier
-    public function destroy(Supplier $supplier)
-    {
-        $supplier->delete();
+    
 
+
+
+    // Menonaktifkan supplier tanpa menghapus riwayat pembelian
+    
+public function destroy(Supplier $supplier)
+{
+    if ($supplier->purchases()->exists()) {
         return redirect()
             ->route('suppliers.index')
-            ->with('success', 'Supplier berhasil dihapus.');
+            ->with(
+                'error',
+                'Supplier tidak dapat dihapus karena masih memiliki riwayat pembelian, termasuk transaksi yang sudah dibatalkan.'
+            );
     }
+
+    $supplier->delete();
+
+    return redirect()
+        ->route('suppliers.index')
+        ->with('success', 'Supplier berhasil dihapus.');
+}
+
+
+
+
+
 }

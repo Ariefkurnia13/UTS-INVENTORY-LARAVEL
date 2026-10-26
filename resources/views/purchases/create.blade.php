@@ -3,7 +3,15 @@
 
 @section('content')
 <div class="container">
-    <h2 class="mb-4">Tambah Pembelian</h2>
+    <div class="mb-4">
+        <h2 class="fw-bold mb-1" style="color: #166534;">
+            <i class="bi bi-plus-circle me-2"></i>
+            Tambah Pembelian
+        </h2>
+        <p class="text-muted mb-0">
+            Tambahkan transaksi pembelian barang dari supplier.
+        </p>
+    </div>
 
     @if ($errors->any())
         <div class="alert alert-danger">
@@ -69,9 +77,6 @@
     }
 </script>
 
-    
-
-</script>
 
 
         <div class="card mb-4">

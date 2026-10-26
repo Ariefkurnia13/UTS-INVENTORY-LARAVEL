@@ -30,12 +30,12 @@
     @endif
 </p>
 
+
 @if (auth()->user()->role === 'admin' && $sale->status === 'completed')
     <form
         action="{{ route('sales.cancel', $sale->id) }}"
         method="POST"
-        class="mt-3"
-        onsubmit="return confirm('Yakin ingin membatalkan penjualan ini? Stok barang akan dikembalikan.');"
+        class="form-konfirmasi-batal-penjualan mt-3"
     >
         @csrf
         @method('PATCH')
@@ -97,3 +97,30 @@
     </div>
 </div>
 @endsection
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.form-konfirmasi-batal-penjualan').forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: 'Batalkan Penjualan?',
+                text: 'Stok barang akan dikembalikan. Pastikan Anda ingin melanjutkan.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#16a34a',
+                confirmButtonText: 'Ya, Batalkan!',
+                cancelButtonText: 'Tidak, Kembali',
+                reverseButtons: true
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+});
+</script>
+

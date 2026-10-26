@@ -13,7 +13,15 @@ class Supplier extends Model
         'phone',
         'email',
         'address',
+        'is_active',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+        ];
+    }
 
     public function purchases(): HasMany
     {

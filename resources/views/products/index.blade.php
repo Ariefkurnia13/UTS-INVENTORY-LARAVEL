@@ -1,16 +1,11 @@
 @extends('layouts.app')
 
 @section('title', 'Dashboard Inventory')
-@section('heading', 'Dashboard')
+@section('heading', '')
 
 @section('content')
 
-@if(session('success'))
-    <div class="alert alert-success bg-white border-success-subtle">
-        <i class="bi bi-check-circle-fill text-success me-2"></i>
-        {{ session('success') }}
-    </div>
-@endif
+
 
 
 @if(session('error'))
@@ -35,16 +30,22 @@
 {{-- DAFTAR PRODUK --}}
 <div class="panel">
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
-        <div>
-            <h5 class="panel-heading">Daftar Produk</h5>
-            <div class="panel-description">
-                Kelola data dan pantau persediaan barang.
-            </div>
-        </div>
+        
+<div>
+    <div class="d-flex align-items-center gap-3">
+        <i class="bi bi-box-seam page-title-icon"></i>
+        <h1 class="page-title mb-0">Daftar Produk</h1>
+    </div>
+
+    <p class="page-subtitle mb-0">
+        Kelola data dan pantau persediaan barang.
+    </p>
+</div>
+
 
         @if(auth()->user()->isAdmin())
     <a href="{{ route('products.create') }}" class="btn-green">
-        <i class="bi bi-plus-lg"></i>
+        <i class="bi bi-plus-circle me-2"></i>
         Tambah Produk
     </a>
 @endif
@@ -52,53 +53,56 @@
 
     {{-- PENCARIAN --}}
     <form method="GET" action="{{ route('products.index') }}"
-          class="row g-2 mb-4">
-        <div class="col-12 col-md-6">
-            <div class="input-group">
-                <span class="input-group-text bg-white">
-                    <i class="bi bi-search text-secondary"></i>
-                </span>
-                <input
-                    type="text"
-                    name="search"
-                    value="{{ $search }}"
-                    class="form-control"
-                    placeholder="Cari nama produk atau SKU..."
-                >
-            </div>
-        </div>
+      class="row g-2 mb-4 align-items-center">
 
-        <div class="col-auto">
-            <button type="submit" class="btn-green">
-                Cari
-            </button>
-        </div>
-
-        
-<div class="col-12 col-md-4">
-    <select name="category_id" class="form-select">
-        <option value="">Semua Kategori</option>
-        @foreach($categories as $category)
-            <option
-                value="{{ $category->id }}"
-                @selected((string) $categoryId === (string) $category->id)
+    {{-- Kolom pencarian --}}
+    <div class="col-12 col-md-5">
+        <div class="input-group">
+            <span class="input-group-text bg-white">
+                <i class="bi bi-search text-secondary"></i>
+            </span>
+            <input
+                type="text"
+                name="search"
+                value="{{ $search }}"
+                class="form-control"
+                placeholder="Cari nama produk atau SKU..."
             >
-                {{ $category->name }}
-            </option>
-        @endforeach
-    </select>
-</div>
+        </div>
+    </div>
 
+    {{-- Kategori di sebelah kanan kolom pencarian --}}
+    <div class="col-12 col-md-4">
+        <select name="category_id" class="form-select">
+            <option value="">Semua Kategori</option>
+            @foreach($categories as $category)
+                <option
+                    value="{{ $category->id }}"
+                    @selected((string) $categoryId === (string) $category->id)
+                >
+                    {{ $category->name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
 
-        @if($search || $categoryId)
-            <div class="col-auto">
-                <a href="{{ route('products.index') }}"
-                   class="btn btn-light border py-2">
-                    Reset
-                </a>
-            </div>
-        @endif
-    </form>
+    {{-- Tombol Cari di sebelah kanan kategori --}}
+    <div class="col-auto">
+        <button type="submit" class="btn-green">
+            Cari
+        </button>
+    </div>
+
+    {{-- Reset tetap berfungsi seperti sebelumnya --}}
+    @if($search || $categoryId)
+        <div class="col-auto">
+            <a href="{{ route('products.index') }}"
+               class="btn btn-light border py-2">
+                Reset
+            </a>
+        </div>
+    @endif
+
 
     <div class="table-responsive">
         <table class="table">
@@ -171,19 +175,20 @@
 @endif
 
                                 @if(auth()->user()->isAdmin())
-    <form action="{{ route('products.destroy', $product) }}"
-          method="POST"
-          onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
-        @csrf
-        @method('DELETE')
+    
+<form action="{{ route('products.destroy', $product) }}"
+      method="POST"
+      class="form-konfirmasi-hapus m-0">
+    @csrf
+    @method('DELETE')
 
-        <button type="submit"
-                class="action-btn action-delete"
-                title="Hapus"
-                aria-label="Hapus produk">
-            <i class="bi bi-trash"></i>
-        </button>
-    </form>
+    <button type="submit"
+            class="action-btn action-delete"
+            title="Hapus"
+            aria-label="Hapus produk">
+        <i class="bi bi-trash"></i>
+    </button>
+</form>
 @endif
                             </div>
                         </td>

@@ -2,16 +2,19 @@
 @extends('layouts.app')
 
 @section('title', 'Stok Menipis')
-@section('heading', 'Stok Menipis')
+@section('heading', '')
 
 @section('content')
 
 <div class="panel">
     <div class="mb-4">
-        <h5 class="panel-heading">Daftar Produk Stok Menipis</h5>
-        <div class="panel-description">
-            Produk dengan jumlah stok yang mencapai atau berada di bawah batas minimum.
-        </div>
+        <div class="d-flex align-items-center gap-2">
+    <i class="bi bi-exclamation-triangle" style="color: #166534;"></i>
+    <h5 class="panel-heading mb-0" style="color: #166534;">Daftar Produk Stok Menipis</h5>
+</div>
+<p class="panel-description mb-0">
+    Produk dengan jumlah stok yang mencapai atau berada di bawah batas minimum.
+</p>
     </div>
 
     <div class="table-responsive">

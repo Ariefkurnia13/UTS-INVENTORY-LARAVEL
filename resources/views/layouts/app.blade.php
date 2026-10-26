@@ -118,17 +118,18 @@
         }
 
         .page-title {
-            margin: 0 0 6px;
-            font-size: clamp(23px, 3vw, 29px);
-            font-weight: 800;
-            letter-spacing: -.7px;
-        }
+    margin: 0 0 6px;
+    color: #146b36;
+    font-size: clamp(30px, 3vw, 40px);
+    font-weight: 800;
+    letter-spacing: -.7px;
+}
 
-        .page-subtitle {
-            margin: 0;
-            color: var(--text-muted);
-            font-size: 14px;
-        }
+.page-subtitle {
+    margin: 0;
+    color: #718096;
+    font-size: 18px;
+}
 
         .admin-chip {
             display: flex;
@@ -361,12 +362,17 @@
             .admin-chip .admin-text { display: none; }
             .stat-card, .panel { padding: 18px; }
         }
+
+        .page-title-icon {
+    color: #146b36;
+    font-size: 36px;
+}
     </style>
 
     @stack('styles')
 </head>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 <body>
 
@@ -395,13 +401,7 @@
 
 
         @auth
-    @if(auth()->user()->isAdmin())
-        <a href="{{ route('products.create') }}"
-           class="{{ request()->routeIs('products.create') ? 'active' : '' }}">
-            <i class="bi bi-plus-circle"></i>
-            Tambah Produk
-        </a>
-    @endif
+    
 
     {{-- Menu Data Kategori untuk Admin dan Staff --}}
     <a href="{{ route('categories.index') }}"
@@ -444,8 +444,6 @@
         Manajemen Pengguna
     </a>
 @endif
-
-
 @endauth
 
         <div class="sidebar-footer">
@@ -457,7 +455,9 @@
     <main class="main-content">
         <header class="topbar">
             <div>
-                <h1 class="page-title">@yield('heading', 'Dashboard')</h1>
+                @if (View::hasSection('heading'))
+    <h1 class="page-title">@yield('heading')</h1>
+@endif
                 
             </div>
 
@@ -472,7 +472,7 @@
 
         <div class="admin-text">
             <div class="fw-bold">
-                {{ auth()->user()->name }}
+                {{ preg_replace('/^Demo\s+/i', '', auth()->user()->name) }}
             </div>
             <small class="text-secondary">
                 {{ ucfirst(auth()->user()->role) }}
@@ -498,7 +498,66 @@
         @yield('content')
     </main>
 
+    
+    {{-- Library SweetAlert2 harus dimuat sebelum digunakan --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     @stack('scripts')
+
+    
+{{-- Notifikasi sukses dan gagal --}}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    @if (session('success'))
+        Swal.fire({
+            title: 'Berhasil!',
+            text: @json(session('success')),
+            icon: 'success',
+            confirmButtonColor: '#16a34a',
+            confirmButtonText: 'OK'
+        });
+    @endif
+
+    @if (session('error'))
+        Swal.fire({
+            title: 'Gagal!',
+            text: @json(session('error')),
+            icon: 'error',
+            confirmButtonColor: '#dc2626',
+            confirmButtonText: 'OK'
+        });
+    @endif
+});
+</script>
+
+
+    {{-- Konfirmasi hapus untuk semua form yang memakai class ini --}}
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.form-konfirmasi-hapus').forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                Swal.fire({
+                    title: 'Yakin ingin menghapus?',
+                    text: 'Data yang dihapus tidak dapat dikembalikan. Pastikan data tidak sedang digunakan.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc2626',
+                    cancelButtonColor: '#16a34a',
+                    confirmButtonText: 'Ya, Hapus!',
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true
+                }).then(function (result) {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    });
+    </script>
 </body>
 </html>

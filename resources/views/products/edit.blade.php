@@ -114,7 +114,26 @@
                 </div>
 
             
-                </div>
+                
+<div class="col-md-6">
+    <label for="purchase_price" class="form-label fw-semibold">
+        Harga Beli (Rp)
+    </label>
+    <div class="input-group">
+        <span class="input-group-text">Rp</span>
+        <input
+            type="number"
+            id="purchase_price"
+            name="purchase_price"
+            class="form-control"
+            min="0"
+            step="0.01"
+            value="{{ old('purchase_price', $product->purchase_price ?? 0) }}"
+            required
+        >
+    </div>
+</div>
+
 
                 <div class="col-md-6">
                     <label for="selling_price" class="form-label fw-semibold">

@@ -3,30 +3,25 @@
 @section('content')
 <div class="container-fluid py-4">
 
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
-        <div>
-            <h2 class="fw-bold mb-1" style="color: #166534;">
-                <i class="bi bi-truck me-2"></i>Data Supplier
-            </h2>
-            <p class="text-secondary mb-0">
-                Kelola data pemasok barang InventoryPro.
-            </p>
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div>
+        <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-truck page-title-icon"></i>
+            <h1 class="page-title mb-0">Data Supplier</h1>
         </div>
 
-        @if(auth()->user()->isAdmin())
-            <a href="{{ route('suppliers.create') }}" class="btn btn-success">
-                <i class="bi bi-plus-lg me-1"></i>
-                Tambah Supplier
-            </a>
-        @endif
+        <p class="page-subtitle mb-0">
+            Kelola data pemasok barang InventorySI.
+        </p>
     </div>
 
-    {{-- Notifikasi --}}
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
+    <a href="{{ route('suppliers.create') }}" class="btn-green">
+        <i class="bi bi-plus-circle"></i>
+        Tambah Supplier
+    </a>
+</div>
+
+    
 
     @if(session('error'))
         <div class="alert alert-danger">
@@ -38,6 +33,7 @@
     <div class="card border-0 shadow-sm rounded-4">
         <div class="card-body">
             
+
 {{-- Pencarian Supplier --}}
 <form action="{{ route('suppliers.index') }}" method="GET" class="mb-4">
     <div class="row g-2">
@@ -58,12 +54,15 @@
             </button>
         </div>
 
-        <div class="col-auto">
-            <a href="{{ route('suppliers.index') }}"
-               class="btn btn-outline-secondary">
-                Reset
-            </a>
-        </div>
+        @if(!empty($search))
+            <div class="col-auto">
+                <a href="{{ route('suppliers.index') }}"
+                   class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-counterclockwise me-1"></i>
+                    Reset
+                </a>
+            </div>
+        @endif
     </div>
 </form>
     

@@ -1,32 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid py-4">
-
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
-        <div>
-            <h2 class="fw-bold mb-1" style="color: #166534;">
-                <i class="bi bi-tags me-2"></i>Data Kategori
-            </h2>
-            <p class="text-secondary mb-0">
-                Kelola kategori produk InventoryPro.
-            </p>
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div>
+        <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-tags page-title-icon"></i>
+            <h1 class="page-title mb-0">Data Kategori</h1>
         </div>
 
-        @if(auth()->user()->isAdmin())
-            <a href="{{ route('categories.create') }}" class="btn btn-success">
-                <i class="bi bi-plus-lg me-1"></i>
-                Tambah Kategori
-            </a>
-        @endif
+        <p class="page-subtitle mb-0">
+            Kelola kategori produk InventorySI.
+        </p>
     </div>
 
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
+   <a href="{{ route('categories.create') }}" class="btn-green">
+    <i class="bi bi-plus-circle"></i>
+    Tambah Kategori
+</a>
+</div>
 
+    
     @if(session('error'))
         <div class="alert alert-danger">
             {{ session('error') }}
@@ -112,10 +105,12 @@
                 <i class="bi bi-pencil"></i>
             </a>
 
-            {{-- Tombol Hapus --}}
-            <form action="{{ route('categories.destroy', $category) }}"
-                  method="POST"
-                  class="form-hapus-kategori m-0">
+            
+{{-- Tombol Hapus --}}
+<form action="{{ route('categories.destroy', $category) }}"
+      method="POST"
+      class="form-hapus-kategori form-konfirmasi-hapus m-0">
+
 
                 @csrf
                 @method('DELETE')
@@ -153,29 +148,3 @@
     </div>
 </div>
 @endsection
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.form-hapus-kategori').forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            Swal.fire({
-                title: 'Hapus Kategori?',
-                text: 'Kategori yang dihapus tidak dapat dikembalikan. Pastikan kategori tidak sedang digunakan oleh produk.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#dc2626',
-                cancelButtonColor: '#16a34a',
-                confirmButtonText: 'Ya, Hapus!',
-                cancelButtonText: 'Batal',
-                reverseButtons: true
-            }).then(function (result) {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
-            });
-        });
-    });
-});
-</script>

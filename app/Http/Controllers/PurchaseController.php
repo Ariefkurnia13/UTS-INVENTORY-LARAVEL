@@ -35,17 +35,17 @@ public function index(Request $request)
 
 
     public function create()
-    {
-        $suppliers = Supplier::orderBy('name')->get();
-        $products = Product::orderBy('name')->get();
+{
+    $suppliers = Supplier::orderBy('name')->get();
+    $products = Product::orderBy('name')->get();
 
-        return view('purchases.create', compact('suppliers', 'products'));
-    }
-
+    return view('purchases.create', compact('suppliers', 'products'));
+}
     
 public function store(Request $request)
 {
     
+
 $validated = $request->validate([
     'supplier_id' => ['required', 'exists:suppliers,id'],
     'items' => ['required', 'array', 'min:1'],
@@ -53,7 +53,11 @@ $validated = $request->validate([
     'items.*.quantity' => ['nullable', 'integer', 'min:1'],
     'items.*.unit_cost' => ['nullable', 'numeric', 'min:0'],
     'purchased_at' => ['nullable', 'date'],
+], [
+    'supplier_id.required' => 'Supplier wajib dipilih.',
+    'supplier_id.exists' => 'Supplier tidak ditemukan.',
 ]);
+
 
 $items = collect($validated['items'])
     ->filter(fn ($item) => !empty($item['product_id']))

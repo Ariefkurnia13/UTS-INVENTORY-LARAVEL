@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Masuk — InventoryPro</title>
+    <title>Masuk — InventorySI</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { min-height: 100vh; background: linear-gradient(135deg,#dcfce7,#f7fdf8); display:grid; place-items:center; font-family: 'Segoe UI',Arial,sans-serif; }
@@ -16,7 +16,7 @@
 </head>
 <body>
     <main class="login-card">
-        <div class="brand mb-2">InventoryPro</div>
+        <div class="brand mb-2">InventorySI</div>
         <p class="text-secondary mb-4">Masuk untuk mengelola inventaris dan transaksi.</p>
         @if(session('status'))<div class="alert alert-success">{{ session('status') }}</div>@endif
         @if($errors->any())

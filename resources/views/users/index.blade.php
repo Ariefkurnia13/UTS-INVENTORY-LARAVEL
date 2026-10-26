@@ -2,7 +2,7 @@
 @extends('layouts.app')
 
 @section('title', 'Manajemen Pengguna')
-@section('heading', 'Manajemen Pengguna')
+@section('heading', '')
 
 @section('content')
 
@@ -33,11 +33,14 @@
 <div class="panel">
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
         <div>
-            <h5 class="panel-heading">Daftar Pengguna</h5>
-            <div class="panel-description">
-                Kelola akun Admin dan Staff sistem inventory.
-            </div>
-        </div>
+    <div class="d-flex align-items-center gap-3">
+        <i class="bi bi-people page-title-icon"></i>
+        <h1 class="page-title mb-0">Data Pengguna</h1>
+    </div>
+    <p class="page-subtitle mb-0">
+        Kelola akun Admin dan Staff sistem inventory.
+    </p>
+</div>
 
         <a href="{{ route('users.create') }}" class="btn-green">
             <i class="bi bi-plus-lg"></i>

@@ -51,12 +51,13 @@
     </div>
 </div>
 
+
 @if (auth()->user()->role === 'admin' && $purchase->status === 'completed')
     <div class="mt-3">
         <form
             action="{{ route('purchases.cancel', $purchase->id) }}"
             method="POST"
-            onsubmit="return confirm('Yakin ingin membatalkan pembelian ini? Stok akan dikurangi sesuai jumlah pembelian, jika stok mencukupi.');"
+            class="form-konfirmasi-batal-pembelian m-0"
         >
             @csrf
             @method('PATCH')
@@ -67,6 +68,7 @@
         </form>
     </div>
 @endif
+
 
 
     <div class="card">
@@ -117,3 +119,30 @@
     </div>
 </div>
 @endsection
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.form-konfirmasi-batal-pembelian').forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: 'Batalkan Pembelian?',
+                text: 'Stok akan dikurangi sesuai jumlah pembelian jika stok mencukupi.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#16a34a',
+                confirmButtonText: 'Ya, Batalkan!',
+                cancelButtonText: 'Tidak, Kembali',
+                reverseButtons: true
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+});
+</script>
+

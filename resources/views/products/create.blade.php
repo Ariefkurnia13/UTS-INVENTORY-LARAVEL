@@ -1,12 +1,15 @@
 @extends('layouts.app')
 
 @section('title', 'Tambah Produk')
-@section('heading', 'ADMIN')
+@section('heading', '')
 
 @section('content')
 <div class="container-fluid px-0">
     <div class="mb-4">
-        <h2 class="fw-bold mb-1">Tambah Produk</h2>
+        <h2 class="fw-bold mb-1" style="color: #166534;">
+    <i class="bi bi-plus-circle me-2"></i>
+    Tambah Produk
+</h2>
         <p class="text-secondary mb-0">
             Tambahkan data produk baru ke inventaris.
         </p>

@@ -43,12 +43,12 @@
 </div>
 
 
-        @if(auth()->user()->isAdmin())
+            
     <a href="{{ route('products.create') }}" class="btn-green">
         <i class="bi bi-plus-circle me-2"></i>
         Tambah Produk
     </a>
-@endif
+
     </div>
 
     {{-- PENCARIAN --}}

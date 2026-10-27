@@ -2,7 +2,7 @@
 @extends('layouts.app')
 
 @section('title', 'Edit Produk')
-@section('heading', 'MANAGEMENT')
+@section('heading', '')
 
 @section('content')
 <div class="container-fluid px-0">
